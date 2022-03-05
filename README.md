@@ -1,2 +1,1 @@
-# picture-works-task
-project test for picture works
+laravel react task for picture works
