@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
 use App\Task;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Resources\TaskResource;
+use App\Setting;
 
 class TaskController extends Controller
 {
@@ -32,9 +34,31 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        //
+        $setting = Setting::where('param','allow_duplicates')->first();
+        if ($setting){
+            $allow_duplicate = $setting->value;
+        } else {
+            $allow_duplicate = 0;
+        }
+
+        if( !$allow_duplicate){
+            $request->validate([
+                'label'=> 'unique:tasks'
+            ]);
+        }
+
+        $task = Task::create([
+            'label'=>$request->label,
+            'sort_order'=>$request->sort_order,
+        ]);
+
+        return $this->success( new TaskResource(($task)),
+                                'task added successfully',
+                                Response::HTTP_OK
+                            );
+
     }
 
     /**
@@ -43,9 +67,9 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Task $task)
     {
-        //
+        
     }
 
     /**
