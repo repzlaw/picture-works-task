@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTaskRequest;
 use App\Task;
+use App\Setting;
+use Carbon\Carbon;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Resources\TaskResource;
-use App\Setting;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 
 class TaskController extends Controller
 {
@@ -36,27 +38,11 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        $setting = Setting::where('param','allow_duplicates')->first();
-        if ($setting){
-            $allow_duplicate = $setting->value;
-        } else {
-            $allow_duplicate = 0;
-        }
-
-        if( !$allow_duplicate){
-            $request->validate([
-                'label'=> 'unique:tasks'
-            ]);
-        }
-
-        $task = Task::create([
-            'label'=>$request->label,
-            'sort_order'=>$request->sort_order,
-        ]);
+        $task = Task::create($request->validated());
 
         return $this->success( new TaskResource(($task)),
                                 'task added successfully',
-                                Response::HTTP_OK
+                                Response::HTTP_CREATED
                             );
 
     }
@@ -82,19 +68,33 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        $task->update($request->validated());
+
+        return $this->success( new TaskResource(($task)),
+                                'task updated successfully',
+                                200
+                            );
+        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function toggleTaskCompletedStatus(Task $task)
     {
-        //
+        if($task->completed_at){
+            $task->update([
+                'completed_at'=> null
+            ]);
+        } else {
+            $task->update([
+                'completed_at'=> Carbon::now()->toDateTimeString()
+            ]);
+        }
+
+        return $this->success( new TaskResource(($task)),
+                                'task status updated successfully',
+                                200
+                            );
+
     }
 }
