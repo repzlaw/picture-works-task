@@ -69,7 +69,10 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        
+        return $this->success( new TaskResource(($task)),
+                                'get single task success',
+                                Response::HTTP_OK
+                            );
     }
 
     /**
