@@ -15,6 +15,8 @@ class CreateSettingsTable extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('param');
+            $table->string('value');
             $table->timestamps();
         });
     }
