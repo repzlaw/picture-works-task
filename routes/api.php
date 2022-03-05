@@ -14,14 +14,13 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::apiResources([
     '/tasks'=> 'TaskController',
-
 ]);
+
+Route::put('/tasks/{task}/toggle-status',[App\Http\Controllers\TaskController::class,'toggleTaskCompletedStatus']);
+
+
 
 
 Route::fallback(function(){
