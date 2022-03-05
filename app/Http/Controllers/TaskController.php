@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Task;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Http\Resources\TaskResource;
 
 class TaskController extends Controller
 {
+    use ApiResponse;
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +20,10 @@ class TaskController extends Controller
     {
         $tasks = Task::all();
 
-        
+        return $this->success( TaskResource::collection(($tasks)),
+                                'get all task request success',
+                                Response::HTTP_OK
+                            );
     }
 
     /**
