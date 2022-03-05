@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Setting;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTaskRequest extends FormRequest
@@ -23,9 +24,21 @@ class StoreTaskRequest extends FormRequest
      */
     public function rules()
     {
+        $setting = Setting::where('param','allow_duplicates')->first();
+        if ($setting){
+            $allow_duplicate = $setting->value;
+        } else {
+            $allow_duplicate = 0;
+        }
+
+        if( !$allow_duplicate){
+            return [
+                'label'=> 'required|unique:tasks',
+            ];
+        }
+        
         return [
             'label'=>'required',
-            'sort_order'=>'required|integer',
         ];
     }
 }
