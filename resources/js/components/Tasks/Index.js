@@ -10,19 +10,6 @@ import  {getAllTasks} from '../Service';
 function Index() {
     const [tasks,setTasks] = useState([]);
     const [loading,setLoading] = useState(false);
-    const items = [
-        {
-            "id":1,
-             "label":"mac",
-             "completed_at":'8457'
-        },
-         {
-            "id":2,
-             "label":"dell",
-             "completed_at":null
-
-        },
-    ]
 
     useEffect(() => {
         const fetchTasks = async () => {
