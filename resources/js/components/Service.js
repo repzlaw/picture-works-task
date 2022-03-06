@@ -20,6 +20,29 @@ export const getAllTasks = async ()=>{
   }
 }
 
+//save task
+export const saveTask = async (label) => {
+  
+  try{
+    const task = {
+      label: label,
+    }
+      const {data:{message,status,data}} =   await Axios.post(`${BASE_URL}/tasks`,task);
+      return {
+          status,
+          data,
+          message
+        };
+    }
+    catch(error){
+      const  {status, data:{errors}} =error.response
+      return {
+        status,
+        errors
+      }
+    }
+  }
+
 //toggle tasks
 export const toggleTaskStatus = async (id)=>{
   try{
