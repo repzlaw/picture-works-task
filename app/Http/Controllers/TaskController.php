@@ -97,4 +97,20 @@ class TaskController extends Controller
                             );
 
     }
+
+    //update task order
+    public function updateOrder(Request $request)
+    {
+        foreach ($request->all() as $key => $value) {
+            $task = Task::where('id',$value['id'])->firstOrFail();
+            $task->update([
+                'sort_order'=>$value['sort_order']
+            ]);
+
+        }
+        return $this->success( null,
+                                'sort_order updated successfully',
+                                200
+                            );
+    }
 }
