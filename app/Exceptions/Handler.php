@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -54,6 +55,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        
         if ($exception instanceof ModelNotFoundException) {
             return response()->json([
                 'error' => 'Entry for '.str_replace('App\\', '', $exception->getModel()).' not found',
@@ -66,6 +68,9 @@ class Handler extends ExceptionHandler
                 'code' =>404 
                 ], 404
             );
+        }
+        if($exception instanceof  ModelNotFoundException || $exception instanceof NotFoundHttpException){
+            return response()->json(['message'=>'Resource not found'],Response::HTTP_NOT_FOUND);
         }
         
         return parent::render($request, $exception);
