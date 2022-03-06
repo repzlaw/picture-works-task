@@ -82,3 +82,38 @@ export const toggleTaskStatus = async (id)=>{
     }
   }
 }
+
+// get sorted tasks
+export function getSortedTask(oldTasks, newTasks) {
+  const finalTasks = [];
+  oldTasks.forEach((task1, index1) => {
+      newTasks.forEach((task2, index2) => {
+          if (task1.id === task2.id && index1 !== index2) {
+              finalTasks.push({
+                  id: task1.id,
+                  sort_order: index2+1,
+                  label: task1.label,
+              });
+          }
+      });
+  });
+  return finalTasks;
+}
+
+export const updateTaskOrders =  async(updatedTasks)=> {
+  try{
+        const {data:{message,status,data}} =  await Axios.post(`${BASE_URL}/tasks/update-order`,updatedTasks)
+        return {
+            status,
+            data,
+            message
+          };
+      }
+      catch(error){
+        const  {status, data:{errors}} =error.response
+        return {
+          status,
+          errors
+        }
+  }
+}

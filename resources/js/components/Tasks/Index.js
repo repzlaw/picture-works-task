@@ -1,12 +1,64 @@
 import React,{useState,useEffect} from 'react';
 import '../Assets/Style.css'
 import {Spinner,Container,Row,Col,Card,Badge,Button,Modal} from 'react-bootstrap'
-import { Link } from "react-router-dom";
 import  Task  from "./Task";
 import  Create  from "./Create";
-import  {getAllTasks,saveTask, updateTask} from '../Service';
-import {sortableContainer, sortableElement} from 'react-sortable-hoc';import { arrayMove } from 'react-sortable-hoc';
+import  {getAllTasks,saveTask, updateTask, getSortedTask, updateTaskOrders} from '../Service';
+import {sortableContainer, sortableElement } from 'react-sortable-hoc';
+import {arrayMoveImmutable} from 'array-move';
 
+
+const EditTaskHandler = async (label,id)=>{
+    const response =  await updateTask(label,id)
+    if (response.status === 422) {
+        alert(response.errors.label[0])
+        // setErrors(previousErrors=>{
+        //     return[...response.errors.label]
+        // });
+
+    }
+    if (response.status ==='success') {
+        alert(response.message)
+        window.location.reload()
+        // var itemIndex = tasks.findIndex(function(task) {
+        //     return task.id == id;
+        // });
+        // const existingTask = tasks[itemIndex];
+        // const updatedItem = { ...existingTask, label:label};
+        // let updatedItems = [...tasks];
+        // updatedItems[itemIndex] = updatedItem;
+        // setTasks(previousTasks=>{
+        //     return[...updatedItems]
+        // });
+        // console.log(tasks)
+        
+        // alert(response.message);
+        // setTasks(previousTasks=>{
+        //     return[...previousTasks, response.data]
+        // });
+        // setModalShow(false)
+    }
+    
+
+    
+}
+
+const onSortEnd = async ({oldIndex, newIndex}) => {
+    const response = await getAllTasks();
+    const oldTasks = response.data.data;
+    let newTasks = arrayMoveImmutable(oldTasks,oldIndex,newIndex)
+    const updatedTasks = getSortedTask(oldTasks, newTasks);
+    const result =  await  updateTaskOrders(updatedTasks);
+
+};
+
+
+
+
+const SortableContainer = sortableContainer(({children}) => {    return <div>{children}</div>;  });
+const SortableItem = sortableElement(({task, index}) =>
+    <Task task={task} key={task.id} index={index} onEdit={EditTaskHandler}  />
+);
 function Index() {
     const [tasks,setTasks] = useState([]);
     const [loading,setLoading] = useState(false);
@@ -52,27 +104,12 @@ function Index() {
         if (response.status ==='success') {
             alert(response.message)
             window.location.reload()
-            // var itemIndex = tasks.findIndex(function(task) {
-            //     return task.id == id;
-            // });
-            // const existingTask = tasks[itemIndex];
-            // const updatedItem = { ...existingTask, label:label};
-            // let updatedItems = [...tasks];
-            // updatedItems[itemIndex] = updatedItem;
-            // setTasks(previousTasks=>{
-            //     return[...updatedItems]
-            // });
-            // console.log(tasks)
-            
-            // alert(response.message);
-            // setTasks(previousTasks=>{
-            //     return[...previousTasks, response.data]
-            // });
-            // setModalShow(false)
         }
-        const SortableContainer = sortableContainer(({children}) => {    return <div>{children}</div>;  });
-        const SortableItem = sortableElement(({task}) =><Task  task={task}/>);
+        
+
     }
+
+    
 
 
     return (
@@ -103,11 +140,13 @@ function Index() {
 
                     <div>
                         {tasks.length > 0 && 
-                            tasks.map((task, index) => {
+                        <SortableContainer  onSortEnd={onSortEnd}  >
+                            {tasks.map((task, index) => {
                                 return (
-                                    <Task onEdit={EditTaskHandler} errors={errors} task={task} key={index}/>
+                                    <SortableItem key={`item-${task.id}`} index={index} sortIndex={index} task={task} onEdit={EditTaskHandler} errors={errors} />
                                 )
-                            })
+                            })}
+                        </SortableContainer>
                         }
                         {tasks.length === 0 && 
                             <h6>No Task Found</h6>
@@ -123,4 +162,3 @@ function Index() {
 }
 
 export default Index;
-

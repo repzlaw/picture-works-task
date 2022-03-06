@@ -19,6 +19,7 @@ Route::apiResources([
 ]);
 
 Route::put('/tasks/{task}/toggle-status',[App\Http\Controllers\TaskController::class,'toggleTaskCompletedStatus']);
+Route::post('/tasks/update-order',[App\Http\Controllers\TaskController::class,'updateOrder']);
 
 
 

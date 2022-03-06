@@ -7522,6 +7522,37 @@ function useWindow() {
 
 /***/ }),
 
+/***/ "./node_modules/array-move/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/array-move/index.js ***!
+  \******************************************/
+/*! exports provided: arrayMoveMutable, arrayMoveImmutable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "arrayMoveMutable", function() { return arrayMoveMutable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "arrayMoveImmutable", function() { return arrayMoveImmutable; });
+function arrayMoveMutable(array, fromIndex, toIndex) {
+	const startIndex = fromIndex < 0 ? array.length + fromIndex : fromIndex;
+
+	if (startIndex >= 0 && startIndex < array.length) {
+		const endIndex = toIndex < 0 ? array.length + toIndex : toIndex;
+
+		const [item] = array.splice(fromIndex, 1);
+		array.splice(endIndex, 0, item);
+	}
+}
+
+function arrayMoveImmutable(array, fromIndex, toIndex) {
+	array = [...array];
+	arrayMoveMutable(array, fromIndex, toIndex);
+	return array;
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -91587,7 +91618,7 @@ function NotFound() {
 /*!********************************************!*\
   !*** ./resources/js/components/Service.js ***!
   \********************************************/
-/*! exports provided: getAllTasks, saveTask, updateTask, toggleTaskStatus */
+/*! exports provided: getAllTasks, saveTask, updateTask, toggleTaskStatus, getSortedTask, updateTaskOrders */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -91596,6 +91627,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "saveTask", function() { return saveTask; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateTask", function() { return updateTask; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toggleTaskStatus", function() { return toggleTaskStatus; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSortedTask", function() { return getSortedTask; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateTaskOrders", function() { return updateTaskOrders; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
@@ -91792,6 +91825,67 @@ var toggleTaskStatus = /*#__PURE__*/function () {
   return function toggleTaskStatus(_x4) {
     return _ref4.apply(this, arguments);
   };
+}(); // get sorted tasks
+
+function getSortedTask(oldTasks, newTasks) {
+  var finalTasks = [];
+  oldTasks.forEach(function (task1, index1) {
+    newTasks.forEach(function (task2, index2) {
+      if (task1.id === task2.id && index1 !== index2) {
+        finalTasks.push({
+          id: task1.id,
+          sort_order: index2 + 1,
+          label: task1.label
+        });
+      }
+    });
+  });
+  return finalTasks;
+}
+var updateTaskOrders = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(updatedTasks) {
+    var _yield$Axios$post2, _yield$Axios$post2$da, message, status, data, _error$response5, _status5, errors;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            _context5.prev = 0;
+            _context5.next = 3;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("".concat(_Constant_js__WEBPACK_IMPORTED_MODULE_2__["default"], "/tasks/update-order"), updatedTasks);
+
+          case 3:
+            _yield$Axios$post2 = _context5.sent;
+            _yield$Axios$post2$da = _yield$Axios$post2.data;
+            message = _yield$Axios$post2$da.message;
+            status = _yield$Axios$post2$da.status;
+            data = _yield$Axios$post2$da.data;
+            return _context5.abrupt("return", {
+              status: status,
+              data: data,
+              message: message
+            });
+
+          case 11:
+            _context5.prev = 11;
+            _context5.t0 = _context5["catch"](0);
+            _error$response5 = _context5.t0.response, _status5 = _error$response5.status, errors = _error$response5.data.errors;
+            return _context5.abrupt("return", {
+              status: _status5,
+              errors: errors
+            });
+
+          case 15:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5, null, [[0, 11]]);
+  }));
+
+  return function updateTaskOrders(_x5) {
+    return _ref5.apply(this, arguments);
+  };
 }();
 
 /***/ }),
@@ -91921,12 +92015,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 function Edit(props) {
+  var _props$errors;
+
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(props.task.label),
       _useState2 = _slicedToArray(_useState, 2),
       label = _useState2[0],
       setLabel = _useState2[1];
 
-  var errors = props.errors;
+  var errors = (_props$errors = props.errors) !== null && _props$errors !== void 0 ? _props$errors : [];
 
   var labelHandler = function labelHandler(e) {
     setLabel(e.target.value);
@@ -91999,14 +92095,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Assets_Style_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Assets/Style.css */ "./resources/js/components/Assets/Style.css");
 /* harmony import */ var _Assets_Style_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_Assets_Style_css__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
-/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Task */ "./resources/js/components/Tasks/Task.js");
-/* harmony import */ var _Create__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Create */ "./resources/js/components/Tasks/Create.js");
-/* harmony import */ var _Service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Service */ "./resources/js/components/Service.js");
-/* harmony import */ var react_sortable_hoc__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-sortable-hoc */ "./node_modules/react-sortable-hoc/dist/react-sortable-hoc.esm.js");
+/* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Task */ "./resources/js/components/Tasks/Task.js");
+/* harmony import */ var _Create__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Create */ "./resources/js/components/Tasks/Create.js");
+/* harmony import */ var _Service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Service */ "./resources/js/components/Service.js");
+/* harmony import */ var react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-sortable-hoc */ "./node_modules/react-sortable-hoc/dist/react-sortable-hoc.esm.js");
+/* harmony import */ var array_move__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! array-move */ "./node_modules/array-move/index.js");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -92015,10 +92109,6 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -92034,6 +92124,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
 
@@ -92041,6 +92134,110 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
+
+
+var EditTaskHandler = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(label, id) {
+    var response;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return Object(_Service__WEBPACK_IMPORTED_MODULE_6__["updateTask"])(label, id);
+
+          case 2:
+            response = _context.sent;
+
+            if (response.status === 422) {
+              alert(response.errors.label[0]); // setErrors(previousErrors=>{
+              //     return[...response.errors.label]
+              // });
+            }
+
+            if (response.status === 'success') {
+              alert(response.message);
+              window.location.reload(); // var itemIndex = tasks.findIndex(function(task) {
+              //     return task.id == id;
+              // });
+              // const existingTask = tasks[itemIndex];
+              // const updatedItem = { ...existingTask, label:label};
+              // let updatedItems = [...tasks];
+              // updatedItems[itemIndex] = updatedItem;
+              // setTasks(previousTasks=>{
+              //     return[...updatedItems]
+              // });
+              // console.log(tasks)
+              // alert(response.message);
+              // setTasks(previousTasks=>{
+              //     return[...previousTasks, response.data]
+              // });
+              // setModalShow(false)
+            }
+
+          case 5:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function EditTaskHandler(_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+var onSortEnd = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(_ref2) {
+    var oldIndex, newIndex, response, oldTasks, newTasks, updatedTasks, result;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            oldIndex = _ref2.oldIndex, newIndex = _ref2.newIndex;
+            _context2.next = 3;
+            return Object(_Service__WEBPACK_IMPORTED_MODULE_6__["getAllTasks"])();
+
+          case 3:
+            response = _context2.sent;
+            oldTasks = response.data.data;
+            newTasks = Object(array_move__WEBPACK_IMPORTED_MODULE_8__["arrayMoveImmutable"])(oldTasks, oldIndex, newIndex);
+            updatedTasks = Object(_Service__WEBPACK_IMPORTED_MODULE_6__["getSortedTask"])(oldTasks, newTasks);
+            _context2.next = 9;
+            return Object(_Service__WEBPACK_IMPORTED_MODULE_6__["updateTaskOrders"])(updatedTasks);
+
+          case 9:
+            result = _context2.sent;
+
+          case 10:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function onSortEnd(_x3) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+
+var SortableContainer = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__["sortableContainer"])(function (_ref4) {
+  var children = _ref4.children;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, children);
+});
+var SortableItem = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__["sortableElement"])(function (_ref5) {
+  var task = _ref5.task,
+      index = _ref5.index;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Task__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    task: task,
+    key: task.id,
+    index: index,
+    onEdit: EditTaskHandler
+  });
+});
 
 function Index() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
@@ -92065,31 +92262,31 @@ function Index() {
 
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     var fetchTasks = /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var _ref6 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
         var response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                _context.next = 2;
-                return Object(_Service__WEBPACK_IMPORTED_MODULE_7__["getAllTasks"])();
+                _context3.next = 2;
+                return Object(_Service__WEBPACK_IMPORTED_MODULE_6__["getAllTasks"])();
 
               case 2:
-                response = _context.sent;
+                response = _context3.sent;
                 setTasks(function (previousTasks) {
                   return _toConsumableArray(response.data.data);
                 });
 
               case 4:
               case "end":
-                return _context.stop();
+                return _context3.stop();
             }
           }
-        }, _callee);
+        }, _callee3);
       }));
 
       return function fetchTasks() {
-        return _ref.apply(this, arguments);
+        return _ref6.apply(this, arguments);
       };
     }();
 
@@ -92098,17 +92295,17 @@ function Index() {
   }, []);
 
   var addTaskHandler = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(label) {
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(label) {
       var response;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context2.next = 2;
-              return Object(_Service__WEBPACK_IMPORTED_MODULE_7__["saveTask"])(label);
+              _context4.next = 2;
+              return Object(_Service__WEBPACK_IMPORTED_MODULE_6__["saveTask"])(label);
 
             case 2:
-              response = _context2.sent;
+              response = _context4.sent;
 
               if (response.status === 422) {
                 setErrors(function (previousErrors) {
@@ -92126,29 +92323,29 @@ function Index() {
 
             case 5:
             case "end":
-              return _context2.stop();
+              return _context4.stop();
           }
         }
-      }, _callee2);
+      }, _callee4);
     }));
 
-    return function addTaskHandler(_x) {
-      return _ref2.apply(this, arguments);
+    return function addTaskHandler(_x4) {
+      return _ref7.apply(this, arguments);
     };
   }();
 
   var EditTaskHandler = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(label, id) {
-      var response, SortableContainer, SortableItem;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+    var _ref8 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(label, id) {
+      var response;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
-              _context3.next = 2;
-              return Object(_Service__WEBPACK_IMPORTED_MODULE_7__["updateTask"])(label, id);
+              _context5.next = 2;
+              return Object(_Service__WEBPACK_IMPORTED_MODULE_6__["updateTask"])(label, id);
 
             case 2:
-              response = _context3.sent;
+              response = _context5.sent;
 
               if (response.status === 422) {
                 setErrors(function (previousErrors) {
@@ -92158,45 +92355,19 @@ function Index() {
 
               if (response.status === 'success') {
                 alert(response.message);
-                window.location.reload(); // var itemIndex = tasks.findIndex(function(task) {
-                //     return task.id == id;
-                // });
-                // const existingTask = tasks[itemIndex];
-                // const updatedItem = { ...existingTask, label:label};
-                // let updatedItems = [...tasks];
-                // updatedItems[itemIndex] = updatedItem;
-                // setTasks(previousTasks=>{
-                //     return[...updatedItems]
-                // });
-                // console.log(tasks)
-                // alert(response.message);
-                // setTasks(previousTasks=>{
-                //     return[...previousTasks, response.data]
-                // });
-                // setModalShow(false)
+                window.location.reload();
               }
 
-              SortableContainer = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_8__["sortableContainer"])(function (_ref4) {
-                var children = _ref4.children;
-                return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, children);
-              });
-              SortableItem = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_8__["sortableElement"])(function (_ref5) {
-                var task = _ref5.task;
-                return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Task__WEBPACK_IMPORTED_MODULE_5__["default"], {
-                  task: task
-                });
-              });
-
-            case 7:
+            case 5:
             case "end":
-              return _context3.stop();
+              return _context5.stop();
           }
         }
-      }, _callee3);
+      }, _callee5);
     }));
 
-    return function EditTaskHandler(_x2, _x3) {
-      return _ref3.apply(this, arguments);
+    return function EditTaskHandler(_x5, _x6) {
+      return _ref8.apply(this, arguments);
     };
   }();
 
@@ -92220,21 +92391,25 @@ function Index() {
     onClick: function onClick() {
       return setModalShow(true);
     }
-  }, "Add Task"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Create__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, "Add Task"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Create__WEBPACK_IMPORTED_MODULE_5__["default"], {
     show: modalShow,
     onHide: function onHide() {
       return setModalShow(false);
     },
     onAdd: addTaskHandler,
     errors: errors
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, tasks.length > 0 && tasks.map(function (task, index) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Task__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      onEdit: EditTaskHandler,
-      errors: errors,
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, tasks.length > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(SortableContainer, {
+    onSortEnd: onSortEnd
+  }, tasks.map(function (task, index) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(SortableItem, {
+      key: "item-".concat(task.id),
+      index: index,
+      sortIndex: index,
       task: task,
-      key: index
+      onEdit: EditTaskHandler,
+      errors: errors
     });
-  }), tasks.length === 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h6", null, "No Task Found")))));
+  })), tasks.length === 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h6", null, "No Task Found")))));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Index);
@@ -92336,7 +92511,7 @@ function Task(props) {
     className: "mb-2 row"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Card"].Text, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("strong", {
     className: "label"
-  }, item.label), item.completed_at == null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Badge"], {
+  }, item.label, " "), item.completed_at == null ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Badge"], {
     bg: "primary",
     className: "status-badge float-end mb-3"
   }, "In progress") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["Badge"], {

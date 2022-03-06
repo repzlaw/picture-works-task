@@ -25,7 +25,7 @@ function Task(props) {
                 <Card.Body>
                     <div className="mb-2 row" >
                         <Card.Text>
-                            <strong className='label'>{item.label}</strong> 
+                            <strong className='label'>{item.label} </strong> 
                             { item.completed_at==null?
                                 <Badge bg="primary" className="status-badge float-end mb-3" >In progress</Badge>:
                                 <Badge bg="success" className="status-badge float-end mb-3" >Completed</Badge>

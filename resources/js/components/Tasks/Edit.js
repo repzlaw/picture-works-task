@@ -4,7 +4,7 @@ import {Spinner,Container,Row,Col,Card,Badge,Button,Modal} from 'react-bootstrap
 
 function Edit(props) {
     const [label,setLabel] = useState(props.task.label);
-    const errors =props.errors;
+    const errors =props.errors ?? [];
 
     const labelHandler = (e)=>{
         setLabel(e.target.value)
