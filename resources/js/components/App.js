@@ -17,25 +17,14 @@ function App() {
                 <Container className="p-4">
                 <Routes>
                     <Route exact path="/" element={<TaskList/>}/>
-                    <Route exact path="/tasks/create" element={<CreateTask/>}/>
-                    <Route exact path="/tasks/create/edit-task/:id" element={<EditTask/>}/>
+                    {/* <Route exact path="/tasks/create" element={<CreateTask/>}/> */}
+                    {/* <Route exact path="/tasks/edit/:id" element={<EditTask/>}/> */}
                     <Route exact path="*" element={<NotFound/>}/>
                 </Routes>
                 </Container>
             </div>
             </Router>
         </div>
-        // <div className="container p-5">
-        //     <div className="row justify-content-center">
-        //         <div className="col-md-8">
-        //             <div className="card">
-        //                 <div className="card-header">App Component</div>
-
-        //                 <div className="card-body">I'm an App component!</div>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
     );
 }
 

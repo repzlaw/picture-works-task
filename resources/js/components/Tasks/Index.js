@@ -4,9 +4,8 @@ import {Spinner,Container,Row,Col,Card,Badge,Button,Modal} from 'react-bootstrap
 import { Link } from "react-router-dom";
 import  Task  from "./Task";
 import  Create  from "./Create";
-import  Edit  from "./Edit";
-import  {getAllTasks,saveTask} from '../Service';
-
+import  {getAllTasks,saveTask, updateTask} from '../Service';
+import {sortableContainer, sortableElement} from 'react-sortable-hoc';import { arrayMove } from 'react-sortable-hoc';
 
 function Index() {
     const [tasks,setTasks] = useState([]);
@@ -41,6 +40,40 @@ function Index() {
         }
     }
 
+    const EditTaskHandler = async (label,id)=>{
+        const response =  await updateTask(label,id)
+        if (response.status === 422) {
+
+            setErrors(previousErrors=>{
+                return[...response.errors.label]
+            });
+
+        }
+        if (response.status ==='success') {
+            alert(response.message)
+            window.location.reload()
+            // var itemIndex = tasks.findIndex(function(task) {
+            //     return task.id == id;
+            // });
+            // const existingTask = tasks[itemIndex];
+            // const updatedItem = { ...existingTask, label:label};
+            // let updatedItems = [...tasks];
+            // updatedItems[itemIndex] = updatedItem;
+            // setTasks(previousTasks=>{
+            //     return[...updatedItems]
+            // });
+            // console.log(tasks)
+            
+            // alert(response.message);
+            // setTasks(previousTasks=>{
+            //     return[...previousTasks, response.data]
+            // });
+            // setModalShow(false)
+        }
+        const SortableContainer = sortableContainer(({children}) => {    return <div>{children}</div>;  });
+        const SortableItem = sortableElement(({task}) =><Task  task={task}/>);
+    }
+
 
     return (
         <Container>
@@ -72,7 +105,7 @@ function Index() {
                         {tasks.length > 0 && 
                             tasks.map((task, index) => {
                                 return (
-                                    <Task task={task} key={index}/>
+                                    <Task onEdit={EditTaskHandler} errors={errors} task={task} key={index}/>
                                 )
                             })
                         }

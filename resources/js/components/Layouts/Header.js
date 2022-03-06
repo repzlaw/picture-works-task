@@ -14,9 +14,9 @@ function Header() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav" className="me-auto float-end">
                     <Nav className="me-auto">
-                        <Link className='link' to="/tasks/create">
+                        {/* <Link className='link' to="/tasks/create">
                             <Nav.Item className='head-color'>Add Task</Nav.Item>
-                        </Link>
+                        </Link> */}
                     </Nav>
                 </Navbar.Collapse>
             </Container>

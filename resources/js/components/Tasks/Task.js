@@ -1,17 +1,23 @@
 import React,{useState,useEffect} from 'react';
 import '../Assets/Style.css'
-import {Spinner,Container,Row,Col,Card,Badge,Button} from 'react-bootstrap'
+import {Spinner,Container,Row,Col,Card,Badge,Button,Modal} from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import  {toggleTaskStatus} from '../Service';
+import  Edit  from "./Edit";
 
 
 function Task(props) {
     const [item,setItem] = useState(props.task);
+    const [modalShow, setModalShow] = React.useState(false);
+
     const handleMarkTaskToggle = async () => {
         const response = await toggleTaskStatus(props.task.id)
         setItem(()=>{
             return response.data.data;
         });
+    }
+    const EditTaskHandler = (label,id)=>{
+        props.onEdit(label, id)
     }
     return (
         <div>
@@ -35,9 +41,17 @@ function Task(props) {
                         }
                     </Card.Subtitle>
                     
-                    <Link to="" >
-                        <Button variant="outline-primary" className="button-text">Edit</Button>
-                    </Link>
+                    <Button variant="outline-primary" className='button-text' onClick={() => setModalShow(true)}>
+                            Edit 
+                        </Button>
+
+                        <Edit
+                            show={modalShow}
+                            onHide={() => setModalShow(false)}
+                            task={item}
+                            onEdit={EditTaskHandler}
+                            errors={props.errors}
+                        />
                     {item.completed_at == null?
                     <Button variant="outline-success" className="ml-4 button-text float-end" id={item.id} onClick={handleMarkTaskToggle}>Mark completed</Button>:
                     <Button variant="outline-warning" className="ml-4 button-text float-end" id={item.id} onClick={handleMarkTaskToggle}>Mark not completed</Button>

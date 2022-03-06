@@ -41,7 +41,29 @@ export const saveTask = async (label) => {
         errors
       }
     }
+}
+
+//update task
+export const updateTask =  async(label,id)=> {
+  try{
+      const task = {
+        label: label,
+      }
+        const {data:{message,status,data}} =   await Axios.put(`${BASE_URL}/tasks/${id}`,task);
+        return {
+            status,
+            data,
+            message
+          };
+      }
+      catch(error){
+        const  {status, data:{errors}} =error.response
+        return {
+          status,
+          errors
+        }
   }
+}
 
 //toggle tasks
 export const toggleTaskStatus = async (id)=>{

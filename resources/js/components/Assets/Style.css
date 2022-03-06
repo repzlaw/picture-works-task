@@ -10,3 +10,6 @@
 .label{
     font-size: 18px !important;
 }
+.list{
+    list-style-type: none;
+}
