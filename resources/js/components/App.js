@@ -17,8 +17,6 @@ function App() {
                 <Container className="p-4">
                 <Routes>
                     <Route exact path="/" element={<TaskList/>}/>
-                    {/* <Route exact path="/tasks/create" element={<CreateTask/>}/> */}
-                    {/* <Route exact path="/tasks/edit/:id" element={<EditTask/>}/> */}
                     <Route exact path="*" element={<NotFound/>}/>
                 </Routes>
                 </Container>

@@ -92224,19 +92224,19 @@ var onSortEnd = /*#__PURE__*/function () {
   };
 }();
 
-var SortableContainer = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__["sortableContainer"])(function (_ref4) {
-  var children = _ref4.children;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, children);
-});
-var SortableItem = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__["sortableElement"])(function (_ref5) {
-  var task = _ref5.task,
-      index = _ref5.index;
+var SortableItem = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__["SortableElement"])(function (_ref4) {
+  var task = _ref4.task,
+      index = _ref4.index;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Task__WEBPACK_IMPORTED_MODULE_4__["default"], {
     task: task,
     key: task.id,
     index: index,
     onEdit: EditTaskHandler
   });
+});
+var SortableList = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__["SortableContainer"])(function (_ref5) {
+  var children = _ref5.children;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, children);
 });
 
 function Index() {
@@ -92398,7 +92398,7 @@ function Index() {
     },
     onAdd: addTaskHandler,
     errors: errors
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, tasks.length > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(SortableContainer, {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, tasks.length > 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(SortableList, {
     onSortEnd: onSortEnd
   }, tasks.map(function (task, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(SortableItem, {

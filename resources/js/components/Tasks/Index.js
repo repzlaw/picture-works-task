@@ -4,9 +4,8 @@ import {Spinner,Container,Row,Col,Card,Badge,Button,Modal} from 'react-bootstrap
 import  Task  from "./Task";
 import  Create  from "./Create";
 import  {getAllTasks,saveTask, updateTask, getSortedTask, updateTaskOrders} from '../Service';
-import {sortableContainer, sortableElement } from 'react-sortable-hoc';
+import {SortableContainer, SortableElement } from 'react-sortable-hoc';
 import {arrayMoveImmutable} from 'array-move';
-
 
 const EditTaskHandler = async (label,id)=>{
     const response =  await updateTask(label,id)
@@ -55,10 +54,12 @@ const onSortEnd = async ({oldIndex, newIndex}) => {
 
 
 
-const SortableContainer = sortableContainer(({children}) => {    return <div>{children}</div>;  });
-const SortableItem = sortableElement(({task, index}) =>
+const SortableItem = SortableElement(({task, index}) =>
     <Task task={task} key={task.id} index={index} onEdit={EditTaskHandler}  />
 );
+const SortableList = SortableContainer(({children}) => {    return <div>{children}</div>;  });
+
+
 function Index() {
     const [tasks,setTasks] = useState([]);
     const [loading,setLoading] = useState(false);
@@ -140,13 +141,13 @@ function Index() {
 
                     <div>
                         {tasks.length > 0 && 
-                        <SortableContainer  onSortEnd={onSortEnd}  >
+                        <SortableList  onSortEnd={onSortEnd}  >
                             {tasks.map((task, index) => {
                                 return (
                                     <SortableItem key={`item-${task.id}`} index={index} sortIndex={index} task={task} onEdit={EditTaskHandler} errors={errors} />
                                 )
                             })}
-                        </SortableContainer>
+                        </SortableList>
                         }
                         {tasks.length === 0 && 
                             <h6>No Task Found</h6>
