@@ -34,4 +34,4 @@ Also wrote a unit test for the create task endpoint
 
 - `php artisan db:seed`
 
-
+![Task management page](https://res.cloudinary.com/sirdavies/image/upload/v1646635196/Screen_Shot_2022-03-07_at_7.37.57_AM_ddkwky.png)
