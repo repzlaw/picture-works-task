@@ -11,45 +11,18 @@ const EditTaskHandler = async (label,id)=>{
     const response =  await updateTask(label,id)
     if (response.status === 422) {
         alert(response.errors.label[0])
-        // setErrors(previousErrors=>{
-        //     return[...response.errors.label]
-        // });
 
     }
     if (response.status ==='success') {
         alert(response.message)
         window.location.reload()
-        // var itemIndex = tasks.findIndex(function(task) {
-        //     return task.id == id;
-        // });
-        // const existingTask = tasks[itemIndex];
-        // const updatedItem = { ...existingTask, label:label};
-        // let updatedItems = [...tasks];
-        // updatedItems[itemIndex] = updatedItem;
-        // setTasks(previousTasks=>{
-        //     return[...updatedItems]
-        // });
-        // console.log(tasks)
-        
-        // alert(response.message);
-        // setTasks(previousTasks=>{
-        //     return[...previousTasks, response.data]
-        // });
-        // setModalShow(false)
     }
     
 
     
 }
 
-const onSortEnd = async ({oldIndex, newIndex}) => {
-    const response = await getAllTasks();
-    const oldTasks = response.data.data;
-    let newTasks = arrayMoveImmutable(oldTasks,oldIndex,newIndex)
-    const updatedTasks = getSortedTask(oldTasks, newTasks);
-    const result =  await  updateTaskOrders(updatedTasks);
 
-};
 
 
 
@@ -60,11 +33,22 @@ const SortableItem = SortableElement(({task, index}) =>
 const SortableList = SortableContainer(({children}) => {    return <div>{children}</div>;  });
 
 
-function Index() {
+const Index = () => {
     const [tasks,setTasks] = useState([]);
     const [loading,setLoading] = useState(false);
     const [modalShow, setModalShow] = React.useState(false);
-    const [errors,setErrors] = useState([])
+    const [errors,setErrors] = useState([]);
+
+    const onSortEnd = async ({oldIndex, newIndex}) => {
+         setTasks((tasks) => arrayMoveImmutable(tasks, oldIndex, newIndex));
+        // const response = await getAllTasks();
+        // const oldTasks = response.data.data;
+        const oldTasks = tasks;
+        let newTasks = arrayMoveImmutable(oldTasks,oldIndex,newIndex)
+        const updatedTasks = getSortedTask(oldTasks, newTasks);
+        const result =  await  updateTaskOrders(updatedTasks);
+    
+    };
 
     useEffect(() => {
         const fetchTasks = async () => {

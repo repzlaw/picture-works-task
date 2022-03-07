@@ -92151,29 +92151,12 @@ var EditTaskHandler = /*#__PURE__*/function () {
             response = _context.sent;
 
             if (response.status === 422) {
-              alert(response.errors.label[0]); // setErrors(previousErrors=>{
-              //     return[...response.errors.label]
-              // });
+              alert(response.errors.label[0]);
             }
 
             if (response.status === 'success') {
               alert(response.message);
-              window.location.reload(); // var itemIndex = tasks.findIndex(function(task) {
-              //     return task.id == id;
-              // });
-              // const existingTask = tasks[itemIndex];
-              // const updatedItem = { ...existingTask, label:label};
-              // let updatedItems = [...tasks];
-              // updatedItems[itemIndex] = updatedItem;
-              // setTasks(previousTasks=>{
-              //     return[...updatedItems]
-              // });
-              // console.log(tasks)
-              // alert(response.message);
-              // setTasks(previousTasks=>{
-              //     return[...previousTasks, response.data]
-              // });
-              // setModalShow(false)
+              window.location.reload();
             }
 
           case 5:
@@ -92189,44 +92172,9 @@ var EditTaskHandler = /*#__PURE__*/function () {
   };
 }();
 
-var onSortEnd = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(_ref2) {
-    var oldIndex, newIndex, response, oldTasks, newTasks, updatedTasks, result;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            oldIndex = _ref2.oldIndex, newIndex = _ref2.newIndex;
-            _context2.next = 3;
-            return Object(_Service__WEBPACK_IMPORTED_MODULE_6__["getAllTasks"])();
-
-          case 3:
-            response = _context2.sent;
-            oldTasks = response.data.data;
-            newTasks = Object(array_move__WEBPACK_IMPORTED_MODULE_8__["arrayMoveImmutable"])(oldTasks, oldIndex, newIndex);
-            updatedTasks = Object(_Service__WEBPACK_IMPORTED_MODULE_6__["getSortedTask"])(oldTasks, newTasks);
-            _context2.next = 9;
-            return Object(_Service__WEBPACK_IMPORTED_MODULE_6__["updateTaskOrders"])(updatedTasks);
-
-          case 9:
-            result = _context2.sent;
-
-          case 10:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function onSortEnd(_x3) {
-    return _ref3.apply(this, arguments);
-  };
-}();
-
-var SortableItem = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__["SortableElement"])(function (_ref4) {
-  var task = _ref4.task,
-      index = _ref4.index;
+var SortableItem = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__["SortableElement"])(function (_ref2) {
+  var task = _ref2.task,
+      index = _ref2.index;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_Task__WEBPACK_IMPORTED_MODULE_4__["default"], {
     task: task,
     key: task.id,
@@ -92234,12 +92182,12 @@ var SortableItem = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__["Sorta
     onEdit: EditTaskHandler
   });
 });
-var SortableList = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__["SortableContainer"])(function (_ref5) {
-  var children = _ref5.children;
+var SortableList = Object(react_sortable_hoc__WEBPACK_IMPORTED_MODULE_7__["SortableContainer"])(function (_ref3) {
+  var children = _ref3.children;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, children);
 });
 
-function Index() {
+var Index = function Index() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState2 = _slicedToArray(_useState, 2),
       tasks = _useState2[0],
@@ -92259,6 +92207,41 @@ function Index() {
       _useState6 = _slicedToArray(_useState5, 2),
       errors = _useState6[0],
       setErrors = _useState6[1];
+
+  var onSortEnd = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(_ref4) {
+      var oldIndex, newIndex, oldTasks, newTasks, updatedTasks, result;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              oldIndex = _ref4.oldIndex, newIndex = _ref4.newIndex;
+              setTasks(function (tasks) {
+                return Object(array_move__WEBPACK_IMPORTED_MODULE_8__["arrayMoveImmutable"])(tasks, oldIndex, newIndex);
+              }); // const response = await getAllTasks();
+              // const oldTasks = response.data.data;
+
+              oldTasks = tasks;
+              newTasks = Object(array_move__WEBPACK_IMPORTED_MODULE_8__["arrayMoveImmutable"])(oldTasks, oldIndex, newIndex);
+              updatedTasks = Object(_Service__WEBPACK_IMPORTED_MODULE_6__["getSortedTask"])(oldTasks, newTasks);
+              _context2.next = 7;
+              return Object(_Service__WEBPACK_IMPORTED_MODULE_6__["updateTaskOrders"])(updatedTasks);
+
+            case 7:
+              result = _context2.sent;
+
+            case 8:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function onSortEnd(_x3) {
+      return _ref5.apply(this, arguments);
+    };
+  }();
 
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     var fetchTasks = /*#__PURE__*/function () {
@@ -92410,7 +92393,7 @@ function Index() {
       errors: errors
     });
   })), tasks.length === 0 && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("h6", null, "No Task Found")))));
-}
+};
 
 /* harmony default export */ __webpack_exports__["default"] = (Index);
 
