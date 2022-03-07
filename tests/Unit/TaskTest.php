@@ -2,22 +2,23 @@
 
 namespace Tests\Unit;
 
-use App\Task;
-use PHPUnit\Framework\TestCase;
-
-class TaskTest extends TestCase 
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+class TaskTest extends TestCase
 {
+    use RefreshDatabase;
     /**
-     * A basic unit test example. 
-     * 
+     * A basic unit test example.
+     *
      * @return void
      */
-    public function test_task_create() 
+    public function test_task_create()
     {
-        $response = $this->post('/api/tasks', [ 
-            'label' => 'Write Article', 
-        ]); 
-        $response->assertStatus(201); 
+        $this->withoutExceptionHandling();
+        $response = $this->post('/api/tasks', [
+            'label' => 'Write Articles',
+        ]);
+        $response->assertStatus(201);
 
-    } 
+    }
 }
