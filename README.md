@@ -1,5 +1,37 @@
-laravel react task for picture works
-i created api endpoints for all features specified like creation of tasks fetching all task reordering sort_order and updating tasks.
-all features are working fine.
-the react components are also ready and functional
-i also wrote a unit test for the create task endpoint
+# TASK MANAGEMENT APPLICATION
+
+## DESCRIPTION
+
+API built with laravel backend.
+
+Front end with ReactJs
+
+laravel react task management for picture works
+
+Created API endpoints for all features specified like :
+- creation of tasks 
+- fetching all task
+- reordering sort_order 
+- updating tasks
+
+All features are working fine and the react components are also ready and functional
+
+Also wrote a unit test for the create task endpoint
+
+### HOW TO INSTALL
+
+- Clone project to your local repository.
+
+- copy env example file to .env
+
+- RUN the following commands
+
+- `composer install`
+
+- `npm install`
+
+- `php artisan migrate`
+
+- `php artisan db:seed`
+
+
